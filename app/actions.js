@@ -11,6 +11,11 @@ export async function setCookiesHeader(token) {
     path: '/',
   });
 }
+export async function getCookiesHeader() {
+  const cookieStore = cookies();
+  const token = cookieStore.get('access-token');
+  return token?.value;
+}
 export async function deleteCookiesHeader() {
   cookies().delete('access-token');
 }

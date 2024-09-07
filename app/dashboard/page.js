@@ -1,8 +1,15 @@
+'use client';
+
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import CategoryIcon from '@mui/icons-material/Category';
 import StyleIcon from '@mui/icons-material/Style';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchUserPosts } from '@/features/posts/postSlice';
+import { fetchCategories } from '@/features/categories/categorySlice';
+import { fetchTags } from '@/features/tags/tagSlice';
 const styles = {
   baseBoxStyle: {
     position: 'absolute',
@@ -41,6 +48,17 @@ const styles = {
   },
 };
 const Dashboard = () => {
+  const dispatch = useDispatch();
+  const postsUser = useSelector((state) => state.posts.postsUser);
+  const categories = useSelector((state) => state.categories.categories);
+  const tags = useSelector((state) => state.tags.tags);
+
+  useEffect(() => {
+    dispatch(fetchUserPosts());
+    dispatch(fetchCategories());
+    dispatch(fetchTags());
+  }, [dispatch]);
+
   return (
     <>
       <Typography variant="h6" component="h6">
@@ -54,7 +72,7 @@ const Dashboard = () => {
               Posts
             </Typography>
             <Typography variant="body1" component="h3" sx={{ my: 1 }}>
-              5
+              {postsUser ? postsUser.count : 0}
             </Typography>
             <Button
               variant="contained"
@@ -72,7 +90,7 @@ const Dashboard = () => {
               Categories
             </Typography>
             <Typography variant="body1" component="h3" sx={{ my: 1 }}>
-              4
+              {categories ? categories.count : 0}
             </Typography>
             <Button
               variant="contained"
@@ -90,7 +108,7 @@ const Dashboard = () => {
               Tags
             </Typography>
             <Typography variant="body1" sx={{ my: 1 }}>
-              6
+              {tags ? tags.count : 0}
             </Typography>
             <Button
               variant="contained"
