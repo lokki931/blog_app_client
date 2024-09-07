@@ -40,38 +40,6 @@ export default function DashboardNav() {
           </Button>
         </Box>
       ))}
-      {/* <Box sx={{ mb: 2 }}>
-        <Button // MUI Button
-          href="/dashboard"
-          LinkComponent={Link} // NextJS Link
-          variant={pathname == '/dashboard' ? 'contained' : 'outlined'}>
-          Dashboard
-        </Button>
-      </Box>
-      <Box sx={{ mb: 2 }}>
-        <Button // MUI Button
-          href="/dashboard/posts"
-          LinkComponent={Link} // NextJS Link
-          variant={pathname == '/dashboard/posts' ? 'contained' : 'outlined'}>
-          Posts
-        </Button>
-      </Box>
-      <Box sx={{ mb: 2 }}>
-        <Button // MUI Button
-          href="/dashboard/categories"
-          LinkComponent={Link} // NextJS Link
-          variant={pathname == '/dashboard/categories' ? 'contained' : 'outlined'}>
-          Categories
-        </Button>
-      </Box>
-      <Box sx={{ mb: 2 }}>
-        <Button // MUI Button
-          href="/dashboard/tags"
-          LinkComponent={Link} // NextJS Link
-          variant={pathname == '/dashboard/tags' ? 'contained' : 'outlined'}>
-          Tags
-        </Button>
-      </Box> */}
     </>
   );
 }

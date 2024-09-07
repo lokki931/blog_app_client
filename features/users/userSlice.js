@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Async thunk for fetching data
 export const fetchUser = createAsyncThunk('user/fetchUser', async () => {
-  const response = await fetch('http://localhost:3000/api/me');
+  const response = await fetch(`${process.env.siteUrl}/api/me`);
   const data = await response.json();
   return data;
 });

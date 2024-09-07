@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getCookiesHeader } from '@/app/actions';
 // To handle a GET request to /api
 export async function GET(request) {
-  // Do whatever you want
-  // const token = getCookiesHeader(request);
   let token = request.cookies.get('access-token')?.value;
   if (!token) {
     return NextResponse.json({ messge: 'You no Authorization' }, { status: 200 });

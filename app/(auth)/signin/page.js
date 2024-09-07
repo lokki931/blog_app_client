@@ -73,7 +73,7 @@ const signIn = () => {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(http://localhost:3000/wallpaper.jpg)',
+            backgroundImage: `url(${process.env.siteUrl}/wallpaper.jpg)`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],

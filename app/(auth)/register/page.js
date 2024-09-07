@@ -73,7 +73,7 @@ export default function registerPage() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(http://localhost:3000/wallpaper-reg.jpg)',
+            backgroundImage: `url(${process.env.siteUrl}/wallpaper-reg.jpg)`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -169,48 +169,5 @@ export default function registerPage() {
         </Grid>
       </Grid>
     </ThemeProvider>
-    // <form onSubmit={handleSubmit}>
-    //   {/* Input for Email */}
-    //   <div>
-    //     <label>Email</label>
-    //     <input
-    //       name="email"
-    //       type="text"
-    //       placeholder="Email"
-    //       value={values.email}
-    //       onChange={handleChange}
-    //     />
-    //     {touched.email && errors.email && <div>{errors.email}</div>}
-    //   </div>
-
-    //   {/* Input for Name */}
-    //   <div>
-    //     <label>Name</label>
-    //     <input
-    //       name="name"
-    //       type="text"
-    //       placeholder="Name"
-    //       value={values.name}
-    //       onChange={handleChange}
-    //     />
-    //     {touched.name && errors.name && <div style={{ color: 'red' }}>{errors.name}</div>}
-    //   </div>
-    //   {/* Input for Email */}
-    //   <div>
-    //     <label>Password</label>
-    //     <input
-    //       name="password"
-    //       type="password"
-    //       placeholder="Password"
-    //       value={values.password}
-    //       onChange={handleChange}
-    //     />
-    //     {touched.password && errors.password && <div>{errors.password}</div>}
-    //   </div>
-
-    //   {/* Submit Button */}
-    //   <button type="submit">Submit</button>
-    //   <p>{error ? error : ''}</p>
-    // </form>
   );
 }
