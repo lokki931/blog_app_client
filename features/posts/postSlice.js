@@ -8,8 +8,6 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   return data;
 });
 export const fetchUserPosts = createAsyncThunk('postsUser/fetchUserPosts', async () => {
-  // const response = await fetch(`${process.env.apiUrl}/posts`);
-  // const data = await response.json();
   const token = await getCookiesHeader();
 
   if (!token) {
@@ -26,6 +24,23 @@ export const fetchUserPosts = createAsyncThunk('postsUser/fetchUserPosts', async
   const data = await response.json();
   return data;
 });
+export const createUserPost = createAsyncThunk('createPost/createUserPost', async (dataForm) => {
+  const token = await getCookiesHeader();
+
+  if (!token) {
+    return;
+  }
+
+  const response = await fetch(`http://localhost:5001/api/v1/posts/create`, {
+    method: 'POST',
+    headers: {
+      Authorization: `bearer ${token}`, // notice the Bearer before your token
+    },
+    body: dataForm,
+  });
+  const data = await response.json();
+  return data;
+});
 
 export const postsSlice = createSlice({
   name: 'posts',
@@ -34,6 +49,7 @@ export const postsSlice = createSlice({
     postsUser: null,
     status: 'idle',
     statusUser: 'idle',
+    createPost: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -51,6 +67,9 @@ export const postsSlice = createSlice({
       .addCase(fetchUserPosts.fulfilled, (state, action) => {
         state.postsUser = action.payload;
         state.statusUser = 'idle';
+      })
+      .addCase(createUserPost.fulfilled, (state, action) => {
+        state.createPost = action.payload;
       });
   },
 });

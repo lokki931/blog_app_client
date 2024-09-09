@@ -22,7 +22,10 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     },
   };
 });
-const DashboardBreadcrumbs = ({ name }) => {
+const DashboardBreadcrumbs = ({ name, active }) => {
+  const activeStr = String(active);
+  const activeLink = activeStr.charAt(0).toLowerCase() + activeStr.slice(1);
+
   return (
     <Breadcrumbs aria-label="breadcrumb">
       <StyledBreadcrumb
@@ -32,6 +35,16 @@ const DashboardBreadcrumbs = ({ name }) => {
         icon={<HomeIcon fontSize="small" />}
         clickable
       />
+      {active ? (
+        <StyledBreadcrumb
+          component={Link}
+          href={`/dashboard/${activeLink}`}
+          label={active}
+          clickable
+        />
+      ) : (
+        ''
+      )}
       <StyledBreadcrumb label={name} />
     </Breadcrumbs>
   );
