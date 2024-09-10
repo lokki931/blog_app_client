@@ -1,19 +1,26 @@
 import { getCookiesHeader } from '@/app/actions';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+const apiPostUrl = `${process.env.apiUrl}/posts`;
 
 // Async thunk for fetching data
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const response = await fetch(`${process.env.apiUrl}/posts`);
+  const response = await fetch(`${apiPostUrl}`);
   const data = await response.json();
   return data;
 });
-export const fetchUserPosts = createAsyncThunk('postsUser/fetchUserPosts', async () => {
+export const fetchByIdPost = createAsyncThunk('posts/fetchByIdPost', async (id) => {
+  const response = await fetch(`${apiPostUrl}/${id}/post`);
+  const data = await response.json();
+  return data;
+});
+
+export const fetchUserPosts = createAsyncThunk('posts/fetchUserPosts', async () => {
   const token = await getCookiesHeader();
 
   if (!token) {
     return;
   }
-  const response = await fetch(`${process.env.apiUrl}/posts/user`, {
+  const response = await fetch(`${apiPostUrl}/user`, {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
@@ -24,19 +31,74 @@ export const fetchUserPosts = createAsyncThunk('postsUser/fetchUserPosts', async
   const data = await response.json();
   return data;
 });
-export const createUserPost = createAsyncThunk('createPost/createUserPost', async (dataForm) => {
+export const createUserPost = createAsyncThunk('posts/createUserPost', async (dataForm) => {
   const token = await getCookiesHeader();
 
   if (!token) {
     return;
   }
 
-  const response = await fetch(`http://localhost:5001/api/v1/posts/create`, {
+  const response = await fetch(`${apiPostUrl}/create`, {
     method: 'POST',
     headers: {
       Authorization: `bearer ${token}`, // notice the Bearer before your token
     },
     body: dataForm,
+  });
+  const data = await response.json();
+  return data;
+});
+
+export const updateUserPost = createAsyncThunk('posts/updateUserPost', async (dataUpdate) => {
+
+  const token = await getCookiesHeader();
+
+  if (!token) {
+    return;
+  }
+  try {
+    const response = await fetch(`${apiPostUrl}/${dataUpdate.id}/update`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `bearer ${token}`, // notice the Bearer before your token
+      },
+      body: dataUpdate.appForm,
+    });
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+export const postPublished = createAsyncThunk('posts/postPublished', async (id) => {
+  const token = await getCookiesHeader();
+
+  if (!token) {
+    return;
+  }
+
+  const response = await fetch(`${apiPostUrl}/${id}/published`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `bearer ${token}`, // notice the Bearer before your token
+    },
+  });
+  const data = await response.json();
+  return data;
+});
+export const postDelete = createAsyncThunk('posts/postDelete', async (id) => {
+  const token = await getCookiesHeader();
+
+  if (!token) {
+    return;
+  }
+
+  const response = await fetch(`${apiPostUrl}/${id}/delete`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `bearer ${token}`, // notice the Bearer before your token
+    },
   });
   const data = await response.json();
   return data;
@@ -50,6 +112,10 @@ export const postsSlice = createSlice({
     status: 'idle',
     statusUser: 'idle',
     createPost: null,
+    updatePost: null,
+    publishedPost: null,
+    deletePost: null,
+    postById: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -70,6 +136,18 @@ export const postsSlice = createSlice({
       })
       .addCase(createUserPost.fulfilled, (state, action) => {
         state.createPost = action.payload;
+      })
+      .addCase(updateUserPost.fulfilled, (state, action) => {
+        state.updatePost = action.payload;
+      })
+      .addCase(postPublished.fulfilled, (state, action) => {
+        state.publishedPost = action.payload;
+      })
+      .addCase(postDelete.fulfilled, (state, action) => {
+        state.deletePost = action.payload;
+      })
+      .addCase(fetchByIdPost.fulfilled, (state, action) => {
+        state.postById = action.payload;
       });
   },
 });

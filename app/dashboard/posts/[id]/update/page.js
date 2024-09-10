@@ -7,36 +7,46 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useFormik } from 'formik';
-import { schemaCreatePost } from '@/shema/shema';
-import { createUserPost } from '@/features/posts/postSlice';
-import { useRouter } from 'next/navigation';
+import { schemaUpdatePost } from '@/shema/shema';
+import { fetchByIdPost, updateUserPost } from '@/features/posts/postSlice';
+import { useRouter, useParams } from 'next/navigation';
 const defaultTheme = createTheme();
 
 export default function Posts() {
   const dispatch = useDispatch();
-  const createPost = useSelector((state) => state.posts.createPost);
+  const postById = useSelector((state) => state.posts.postById);
   const router = useRouter();
+  const params = useParams();
+  const id = params.id;
   const [error, setError] = useState();
-
+  useEffect(() => {
+    dispatch(fetchByIdPost(id));
+  }, []);
   const formik = useFormik({
     initialValues: {
-      title: '',
-      content: '',
+      title: postById?.title,
+      content: postById?.content,
       postImg: null,
     },
     isValidating: false,
     isSubmitting: true,
-    validationSchema: schemaCreatePost,
+    enableReinitialize: true,
+    validationSchema: schemaUpdatePost,
     onSubmit: async (values) => {
       const appForm = new FormData();
       appForm.append('title', values.title);
       appForm.append('content', values.content);
+
       appForm.append('postImg', values.postImg);
+
       // for (let value in values) {
       //   appForm.append(value, values[value]);
       // }
-
-      dispatch(createUserPost(appForm));
+      const dataUpdate = {
+        id,
+        appForm,
+      };
+      dispatch(updateUserPost(dataUpdate));
       router.push('/dashboard/posts');
       // console.log(createPost);
     },
@@ -47,9 +57,9 @@ export default function Posts() {
     <ThemeProvider theme={defaultTheme}>
       <Grid>
         <Typography variant="h6" component="h6" sx={{ pb: 2 }}>
-          <span>Create Post</span>
+          <span>Update {id} Post</span>
         </Typography>
-        <DashboardBreadcrumbs active={'Posts'} name={'Create Post'} />
+        <DashboardBreadcrumbs active={'Posts'} name={'Update Post'} />
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ width: '50%' }}>
           <TextField
             margin="normal"

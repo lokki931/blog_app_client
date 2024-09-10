@@ -29,3 +29,8 @@ export const schemaCreatePost = yup.object().shape({
   content: yup.string().required('Content is required'),
   postImg: yup.mixed().required('Photo required'),
 });
+
+export const schemaUpdatePost = yup.object().shape({
+  title: yup.string().required('Title is required'),
+  content: yup.string().required('Content is required'),
+});
