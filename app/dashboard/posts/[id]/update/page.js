@@ -114,7 +114,7 @@ export default function Posts() {
             </Typography>
           )}
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Create
+            Update
           </Button>
           {error ? (
             <Typography variant="body2" sx={{ color: 'red' }}>

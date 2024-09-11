@@ -4,7 +4,7 @@ const apiPostUrl = `${process.env.apiUrl}/posts`;
 
 // Async thunk for fetching data
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const response = await fetch(`${apiPostUrl}`);
+  const response = await fetch(`${apiPostUrl}?skip=0&take=10`);
   const data = await response.json();
   return data;
 });
@@ -50,7 +50,6 @@ export const createUserPost = createAsyncThunk('posts/createUserPost', async (da
 });
 
 export const updateUserPost = createAsyncThunk('posts/updateUserPost', async (dataUpdate) => {
-
   const token = await getCookiesHeader();
 
   if (!token) {
