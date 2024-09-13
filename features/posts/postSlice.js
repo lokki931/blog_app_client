@@ -4,7 +4,7 @@ const apiPostUrl = `${process.env.apiUrl}/posts`;
 
 // Async thunk for fetching data
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const response = await fetch(`${apiPostUrl}?skip=0&take=10`);
+  const response = await fetch(`${apiPostUrl}`);
   const data = await response.json();
   return data;
 });
@@ -86,6 +86,14 @@ export const postPublished = createAsyncThunk('posts/postPublished', async (id) 
   const data = await response.json();
   return data;
 });
+
+export const postUserLike = createAsyncThunk('posts/postUserLike', async (id) => {
+  const response = await fetch(`${apiPostUrl}/${id}/like`, {
+    method: 'PUT',
+  });
+  const data = await response.json();
+  return data;
+});
 export const postDelete = createAsyncThunk('posts/postDelete', async (id) => {
   const token = await getCookiesHeader();
 
@@ -115,6 +123,7 @@ export const postsSlice = createSlice({
     publishedPost: null,
     deletePost: null,
     postById: null,
+    postLike: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -147,6 +156,9 @@ export const postsSlice = createSlice({
       })
       .addCase(fetchByIdPost.fulfilled, (state, action) => {
         state.postById = action.payload;
+      })
+      .addCase(postUserLike.fulfilled, (state, action) => {
+        state.postLike = action.payload;
       });
   },
 });

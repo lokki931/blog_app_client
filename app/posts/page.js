@@ -1,17 +1,24 @@
 'use client';
-import { fetchPosts } from '@/features/posts/postSlice';
-import { Box, Grid, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Box, Grid, Pagination, TextField } from '@mui/material';
+
+import { fetchPosts } from '@/features/posts/postSlice';
+
 import { Post } from '../_components/posts/Post';
-import { useEffect } from 'react';
-import { useState } from 'react';
 
 const Posts = () => {
-  const dispatch = useDispatch();
   const [inputValue, setValue] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 8;
+  const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
   const status = useSelector((state) => state.posts.status);
   const keys = ['title', 'content'];
+
+  const handleChangePage = (event, value) => {
+    setCurrentPage(value);
+  };
 
   const handleChange = (event) => {
     const inputValue = event.target.value;
@@ -22,6 +29,10 @@ const Posts = () => {
     return data.filter((item) => keys.some((key) => item[key].toLowerCase().includes(inputValue)));
   };
 
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = handleSeach(posts).slice(indexOfFirstPost, indexOfLastPost);
+  const countPage = Math.ceil(handleSeach(posts).length / 8);
   const handleKeyPress = (event) => {
     // if (event.key === "Enter") return handleSearch()
   };
@@ -35,9 +46,9 @@ const Posts = () => {
         <p>Loading...</p>
       ) : (
         <>
-          <Grid container alignItems="center" justifyContent="center" sx={{ my: 3 }}>
+          <Grid container alignItems="center" sx={{ my: 3 }}>
             {/* <input type="text"  /> */}
-            <Box sx={{ width: 1 / 4 }}>
+            <Box sx={{ width: 1 / 3 }}>
               <TextField
                 fullWidth
                 id="filled-basic"
@@ -49,11 +60,19 @@ const Posts = () => {
             </Box>
           </Grid>
           <Grid container sx={{ py: 4 }} spacing={4}>
-            {handleSeach(posts).length > 0 ? (
-              handleSeach(posts).map((el) => <Post key={el.id} item={{ ...el }} />)
+            {currentPosts.length > 0 ? (
+              currentPosts.map((el) => <Post key={el.id} item={{ ...el }} />)
             ) : (
               <p>Not found</p>
             )}
+          </Grid>
+          <Grid spacing={2} container justifyContent="center" alignItems="center" sx={{ mb: 3 }}>
+            <Pagination
+              color="primary"
+              count={countPage}
+              page={currentPage}
+              onChange={handleChangePage}
+            />
           </Grid>
         </>
       )}
