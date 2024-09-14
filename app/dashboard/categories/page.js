@@ -6,17 +6,47 @@ import {
   categoryDelete,
   fetchByIdCategory,
 } from '@/features/categories/categorySlice';
+import { fetchUserPosts } from '@/features/posts/postSlice';
+
 import { Box, Button, Grid, Typography } from '@mui/material';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
+import DataPopup from '@/app/_components/DataPopup';
+import DataPostsPopup from '@/app/_components/DataPostsPopup';
 
 export default function Categories() {
+  const [selectedCat, setSelectedCat] = useState(null);
+  const [selectedCatPosts, setSelectedCatPosts] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [postsIsPopupOpen, setPostsIsPopupOpen] = useState(false);
+
   const dispatch = useDispatch();
   const categories = useSelector((state) => state.categories.categories);
+  const postsUser = useSelector((state) => state.posts.postsUser);
 
   const router = useRouter();
+
+  const handleCatClick = (cat) => {
+    setSelectedCat(cat);
+    setIsPopupOpen(true);
+    dispatch(fetchUserPosts());
+  };
+
+  const handleCatPostsClick = (cat) => {
+    setSelectedCatPosts(cat);
+    setPostsIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+    setSelectedCat(null);
+  };
+  const closePostsPopup = () => {
+    setPostsIsPopupOpen(false);
+    setSelectedCatPosts(null);
+  };
 
   const handleDelete = (id) => {
     dispatch(categoryDelete(id));
@@ -25,8 +55,8 @@ export default function Categories() {
 
   useEffect(() => {
     dispatch(fetchCategories());
+    dispatch(fetchUserPosts());
   }, [dispatch]);
-
   return (
     <Grid>
       <Typography variant="h6" component="h6" sx={{ pb: 2 }}>
@@ -52,10 +82,10 @@ export default function Categories() {
             textTransform: 'uppercase',
           }}
           spacing={1}>
-          <Grid item xs={12} sm={10} md={7}>
+          <Grid item xs={12} md={5}>
             Title
           </Grid>
-          <Grid item xs={12} sm={12} md={5}>
+          <Grid item xs={12} md={7}>
             Actions
           </Grid>
         </Grid>
@@ -71,10 +101,10 @@ export default function Categories() {
                 alignItems: 'center',
               }}
               spacing={1}>
-              <Grid item xs={12} sm={10} md={7}>
+              <Grid item xs={12} md={5}>
                 {cat.name}
               </Grid>
-              <Grid item xs={12} sm={12} md={5}>
+              <Grid item xs={12} md={7}>
                 <Button
                   variant="contained"
                   color="success"
@@ -83,6 +113,23 @@ export default function Categories() {
                     router.push(`/dashboard/categories/${cat.id}/update`);
                   }}>
                   update
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{ ml: 1 }}
+                  onClick={() => {
+                    handleCatClick(cat);
+                  }}>
+                  select post
+                </Button>
+                <Button
+                  variant="outlined"
+                  sx={{ ml: 1 }}
+                  onClick={() => {
+                    handleCatPostsClick(cat);
+                  }}>
+                  posts
                 </Button>
                 <Button
                   variant="outlined"
@@ -96,6 +143,12 @@ export default function Categories() {
           ))
           .reverse()}
       </Box>
+      {isPopupOpen && selectedCat && (
+        <DataPopup posts={postsUser?.posts} data={selectedCat} onClose={closePopup} />
+      )}
+      {postsIsPopupOpen && selectedCatPosts && (
+        <DataPostsPopup elem={selectedCatPosts} onClosePosts={closePostsPopup} />
+      )}
     </Grid>
   );
 }

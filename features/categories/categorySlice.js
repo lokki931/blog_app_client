@@ -1,6 +1,7 @@
 import { getCookiesHeader } from '@/app/actions';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 const apiCategoryUrl = `${process.env.apiUrl}/categories`;
+const apiPostCategoryUrl = `${process.env.apiUrl}/post_category`;
 
 // Async thunk for fetching data
 export const fetchCategories = createAsyncThunk('categories/fetchCategories', async () => {
@@ -25,6 +26,26 @@ export const createCategory = createAsyncThunk('categories/createCategory', asyn
   const data = await response.json();
   return data;
 });
+export const createPostCategory = createAsyncThunk(
+  'categories/createPostCategory',
+  async (dataForm) => {
+    const token = await getCookiesHeader();
+
+    if (!token) {
+      return;
+    }
+    const response = await fetch(`${apiPostCategoryUrl}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `bearer ${token}`, // notice the Bearer before your token
+        'Content-Type': 'application/json',
+      },
+      body: dataForm,
+    });
+    const data = await response.json();
+    return data;
+  },
+);
 
 export const categoryDelete = createAsyncThunk('categories/categoryDelete', async (id) => {
   const token = await getCookiesHeader();
@@ -69,6 +90,11 @@ export const fetchByIdCategory = createAsyncThunk('posts/fetchByIdCategory', asy
   const data = await response.json();
   return data;
 });
+export const fetchPostsCategory = createAsyncThunk('posts/fetchPostsCategory', async (id) => {
+  const response = await fetch(`${apiPostCategoryUrl}/${id}/posts`);
+  const data = await response.json();
+  return data;
+});
 
 export const categoriesSlice = createSlice({
   name: 'categories',
@@ -78,6 +104,8 @@ export const categoriesSlice = createSlice({
     removeCategory: null,
     updatedCategory: null,
     categoryById: null,
+    categoryPost: null,
+    postsCat: null,
     status: 'idle',
   },
   reducers: {},
@@ -101,6 +129,12 @@ export const categoriesSlice = createSlice({
       })
       .addCase(fetchByIdCategory.fulfilled, (state, action) => {
         state.categoryById = action.payload;
+      })
+      .addCase(createPostCategory.fulfilled, (state, action) => {
+        state.categoryPost = action.payload;
+      })
+      .addCase(fetchPostsCategory.fulfilled, (state, action) => {
+        state.postsCat = action.payload;
       });
   },
 });
