@@ -85,12 +85,12 @@ export const updateCategory = createAsyncThunk('categories/updateCategory', asyn
   }
 });
 
-export const fetchByIdCategory = createAsyncThunk('posts/fetchByIdCategory', async (id) => {
+export const fetchByIdCategory = createAsyncThunk('categories/fetchByIdCategory', async (id) => {
   const response = await fetch(`${apiCategoryUrl}/${id}/category`);
   const data = await response.json();
   return data;
 });
-export const fetchPostsCategory = createAsyncThunk('posts/fetchPostsCategory', async (id) => {
+export const fetchPostsCategory = createAsyncThunk('categories/fetchPostsCategory', async (id) => {
   const response = await fetch(`${apiPostCategoryUrl}/${id}/posts`);
   const data = await response.json();
   return data;

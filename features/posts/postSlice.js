@@ -1,7 +1,16 @@
 import { getCookiesHeader } from '@/app/actions';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 const apiPostUrl = `${process.env.apiUrl}/posts`;
+const apiPostCategoryUrl = `${process.env.apiUrl}/post_category`;
 
+export const fetchPostCategories = createAsyncThunk(
+  'categories/fetchPostCategories',
+  async (id) => {
+    const response = await fetch(`${apiPostCategoryUrl}/${id}/cats`);
+    const data = await response.json();
+    return data;
+  },
+);
 // Async thunk for fetching data
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   const response = await fetch(`${apiPostUrl}`);
@@ -124,6 +133,7 @@ export const postsSlice = createSlice({
     deletePost: null,
     postById: null,
     postLike: null,
+    postCategories: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -159,6 +169,9 @@ export const postsSlice = createSlice({
       })
       .addCase(postUserLike.fulfilled, (state, action) => {
         state.postLike = action.payload;
+      })
+      .addCase(fetchPostCategories.fulfilled, (state, action) => {
+        state.postCategories = action.payload;
       });
   },
 });

@@ -2,6 +2,7 @@ import './globals.css';
 import { Header } from './_components/Header';
 import { Providers } from './provider';
 import { Container, Grid } from '@mui/material';
+import Footer from './_components/Footer';
 
 export const metadata = {
   title: 'Blog App',
@@ -13,9 +14,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <Providers>
         <body>
-          <Container>
+          <Container sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <Header />
-            {children}
+            <Grid sx={{ flex: '1' }}>{children}</Grid>
+            <Footer />
           </Container>
         </body>
       </Providers>
