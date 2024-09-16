@@ -3,14 +3,30 @@ import { useEffect, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPostsCategory } from '@/features/categories/categorySlice';
+import { fetchPostsTag } from '@/features/tags/tagSlice';
 
-const DataPostsPopup = ({ elem, onClosePosts }) => {
+const DataPostsPopup = ({ elem, onClosePosts, isOnProp }) => {
+  const [posts, setPosts] = useState(null);
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.categories.postsCat);
+  const postsCat = useSelector((state) => state.categories.postsCat);
+  const postsTag = useSelector((state) => state.tags.postsTag);
 
   useEffect(() => {
-    dispatch(fetchPostsCategory(elem.id));
-  }, [dispatch]);
+    if (!isOnProp) {
+      dispatch(fetchPostsCategory(elem.id));
+    } else {
+      console.log(elem.id)
+      dispatch(fetchPostsTag(elem.id));
+    }
+  }, [dispatch, isOnProp, elem.id]);
+  
+  useEffect(() => {
+    if (!isOnProp) {
+      setPosts(postsCat);
+    } else {
+      setPosts(postsTag);
+    }
+  }, [postsCat, postsTag, isOnProp]);
 
   return (
     <Dialog open={Boolean(elem)} onClose={onClosePosts} maxWidth="sm" fullWidth>

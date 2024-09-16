@@ -2,15 +2,18 @@ import { getCookiesHeader } from '@/app/actions';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 const apiPostUrl = `${process.env.apiUrl}/posts`;
 const apiPostCategoryUrl = `${process.env.apiUrl}/post_category`;
+const apiPostTagUrl = `${process.env.apiUrl}/post_tag`;
 
-export const fetchPostCategories = createAsyncThunk(
-  'categories/fetchPostCategories',
-  async (id) => {
-    const response = await fetch(`${apiPostCategoryUrl}/${id}/cats`);
-    const data = await response.json();
-    return data;
-  },
-);
+export const fetchPostCategories = createAsyncThunk('posts/fetchPostCategories', async (id) => {
+  const response = await fetch(`${apiPostCategoryUrl}/${id}/cats`);
+  const data = await response.json();
+  return data;
+});
+export const fetchPostTags = createAsyncThunk('posts/fetchPostTags', async (id) => {
+  const response = await fetch(`${apiPostTagUrl}/${id}/tags`);
+  const data = await response.json();
+  return data;
+});
 // Async thunk for fetching data
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   const response = await fetch(`${apiPostUrl}`);
@@ -134,6 +137,7 @@ export const postsSlice = createSlice({
     postById: null,
     postLike: null,
     postCategories: null,
+    postTags: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -172,6 +176,9 @@ export const postsSlice = createSlice({
       })
       .addCase(fetchPostCategories.fulfilled, (state, action) => {
         state.postCategories = action.payload;
+      })
+      .addCase(fetchPostTags.fulfilled, (state, action) => {
+        state.postTags = action.payload;
       });
   },
 });

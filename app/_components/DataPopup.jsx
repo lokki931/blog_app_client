@@ -15,8 +15,9 @@ import {
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { createPostCategory } from '@/features/categories/categorySlice';
+import { createPostTag } from '@/features/tags/tagSlice';
 
-const DataPopup = ({ data, onClose, posts }) => {
+const DataPopup = ({ data, onClose, posts, isOn }) => {
   // const [comment, setComment] = useState('');
   const [selectedPost, setSelectedPost] = useState('');
 
@@ -27,15 +28,19 @@ const DataPopup = ({ data, onClose, posts }) => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle form submission (e.g., send data to server or console.log)
-    // const appForm = new FormData();
-    const appForm = JSON.stringify({
-      postId: selectedPost,
-      categoryId: data.id,
-    });
-    // appForm.append('categoryId', data.id);
-    // appForm.append('postId', selectedPost);
-    dispatch(createPostCategory(appForm));
+    if(!isOn){
+      const appForm = JSON.stringify({
+        postId: selectedPost,
+        categoryId: data.id,
+      });
+      dispatch(createPostCategory(appForm));
+    }else{
+      const appForm = JSON.stringify({
+        postId: selectedPost,
+        tagId: data.id,
+      });
+      dispatch(createPostTag(appForm));
+    }
     setSelectedPost('');
     // console.log('Data ID:', data.id);
     // console.log('Post ID:', selectedPost);
