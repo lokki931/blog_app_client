@@ -5,6 +5,7 @@ import { Box, Grid, Typography } from '@mui/material';
 import { fetchByIdPost, fetchPostCategories, fetchPostTags } from '@/features/posts/postSlice';
 import Image from 'next/image';
 import { LikePost } from '@/app/_components/posts/LikePost';
+import PostInclude from '@/app/_components/posts/PostInclude';
 
 const Posts = ({ params }) => {
   const [data, setData] = useState(null);
@@ -44,24 +45,8 @@ const Posts = ({ params }) => {
           {data?.title}
         </Typography>
         <LikePost setData={setData} data={data} />
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          {cats?.length > 0 ? <span>Categories: </span> : ''}
-          {cats?.map((cat, i, arr) => (
-            <span key={cat.id}>
-              {cat.name}
-              {arr.length === i + 1 ? '' : ', '}
-            </span>
-          ))}
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          {tags?.length > 0 ? <span>Tags: </span> : ''}
-          {tags?.map((tag, i, arr) => (
-            <span key={tag.id}>
-              #{tag.name}
-              {arr.length === i + 1 ? '' : ', '}
-            </span>
-          ))}
-        </Typography>
+        <PostInclude items={cats} title={'Categories'} isTagLink={false} />
+        <PostInclude items={tags} title={'Tags'} isTagLink={true} />
         <Typography variant="body2" sx={{ mb: 1 }}>
           {data?.content}
         </Typography>
