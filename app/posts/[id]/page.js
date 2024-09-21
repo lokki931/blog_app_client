@@ -6,6 +6,7 @@ import { fetchByIdPost, fetchPostCategories, fetchPostTags } from '@/features/po
 import Image from 'next/image';
 import { LikePost } from '@/app/_components/posts/LikePost';
 import PostInclude from '@/app/_components/posts/PostInclude';
+import Comments from '@/app/_components/posts/Comments';
 
 const Posts = ({ params }) => {
   const [data, setData] = useState(null);
@@ -29,29 +30,39 @@ const Posts = ({ params }) => {
   }, [postById, postCategories, postTags]);
 
   return (
-    <Grid container sx={{ my: 3 }} spacing={4}>
-      <Grid item xs={12} md={6}>
-        <Image
-          alt={data?.title}
-          loader={() => data?.postImg}
-          src={data?.postImg}
-          width={0}
-          height={0}
-          style={{ width: '100%', height: 'auto' }}
-        />
+    <>
+      <Grid container sx={{ my: 3 }} spacing={4}>
+        <Grid item xs={12} md={6}>
+          <Image
+            alt={data?.title}
+            loader={() => data?.postImg}
+            src={data?.postImg}
+            width={0}
+            height={0}
+            style={{ width: '100%', height: 'auto' }}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Typography variant="h5" sx={{ mb: 1 }}>
+            {data?.title}
+          </Typography>
+          <LikePost setData={setData} data={data} />
+          <PostInclude items={cats} title={'Categories'} isTagLink={false} />
+          <PostInclude items={tags} title={'Tags'} isTagLink={true} />
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            {data?.content}
+          </Typography>
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid sx={{ my: 2 }}>
         <Typography variant="h5" sx={{ mb: 1 }}>
-          {data?.title}
+          Comments
         </Typography>
-        <LikePost setData={setData} data={data} />
-        <PostInclude items={cats} title={'Categories'} isTagLink={false} />
-        <PostInclude items={tags} title={'Tags'} isTagLink={true} />
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          {data?.content}
-        </Typography>
+        <Grid sx={{ mb: 1 }}>
+          <Comments id={params.id} />
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

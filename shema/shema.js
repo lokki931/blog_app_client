@@ -47,3 +47,6 @@ export const schemaUpdateCategory = yup.object().shape({
 export const schemaTag = yup.object().shape({
   name: yup.string().required('Title is required'),
 });
+export const schemaComment = yup.object().shape({
+  text: yup.string().required('Text is required'),
+});
