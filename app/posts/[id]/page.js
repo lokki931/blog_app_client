@@ -58,7 +58,7 @@ const Posts = ({ params }) => {
         <Typography variant="h5" sx={{ mb: 1 }}>
           Comments
         </Typography>
-        <Grid sx={{ mb: 1 }}>
+        <Grid sx={{ mb: 1, width:1/2 }}>
           <Comments id={params.id} />
         </Grid>
       </Grid>

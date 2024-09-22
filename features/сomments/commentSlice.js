@@ -21,7 +21,7 @@ export const createComment = createAsyncThunk('comments/createComment', async (d
   const data = await response.json();
   return data;
 });
-export const fetchPostComments = createAsyncThunk('comments/fetchPostComments', async () => {
+export const fetchPostComments = createAsyncThunk('comments/fetchPostComments', async (id) => {
   const response = await fetch(`${apiCommentUrl}/${id}/comments`);
   const data = await response.json();
   return data;
